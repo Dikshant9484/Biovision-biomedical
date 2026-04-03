@@ -22,10 +22,8 @@ from routes.health import health_bp
 def create_app():
     app = Flask(__name__)
 
-    # Read allowed origins from environment
     allowed_origins = os.getenv("ALLOWED_ORIGINS", "*")
 
-    # Enable CORS properly for all API routes
     CORS(
         app,
         resources={r"/api/*": {"origins": allowed_origins}},
@@ -35,7 +33,6 @@ def create_app():
         expose_headers=["Content-Type"],
     )
 
-    # Extra manual CORS headers for file upload / preflight reliability
     @app.after_request
     def add_cors_headers(response):
         response.headers["Access-Control-Allow-Origin"] = allowed_origins
@@ -43,19 +40,16 @@ def create_app():
         response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
         return response
 
-    # Flask config
     app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024
     app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "biovision-dev-key")
 
-    # Root route (so Render / browser root check doesn't show 404)
     @app.route("/")
     def home():
         return {
-            "message": "BioVision AI Backend is running",
+            "message": "BioVision AI Backend is running on Hugging Face",
             "status": "ok"
         }
 
-    # Register Blueprints
     app.register_blueprint(health_bp, url_prefix="/api")
     app.register_blueprint(breast_bp, url_prefix="/api/predict")
     app.register_blueprint(skin_bp, url_prefix="/api/predict")
@@ -72,6 +66,6 @@ def create_app():
 app = create_app()
 
 if __name__ == "__main__":
-    port = int(os.getenv("PORT", 5000))
+    port = int(os.getenv("PORT", 7860))
     debug = os.getenv("FLASK_DEBUG", "false").lower() == "true"
     app.run(host="0.0.0.0", port=port, debug=debug)

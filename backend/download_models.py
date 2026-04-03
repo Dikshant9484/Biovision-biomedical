@@ -1,37 +1,36 @@
 import os
-import requests
+from huggingface_hub import hf_hub_download
 
-MODEL_DIR = "models/weights"
-os.makedirs(MODEL_DIR, exist_ok=True)
+REPO_ID = "dikshant3697/biovision-models"
+REPO_TYPE = "dataset"
 
-FILES = {
-    "blood_model.keras": "https://huggingface.co/datasets/dikshant3697/biovision-models/resolve/main/blood_model.keras",
-    "breast_image_model.keras": "https://huggingface.co/datasets/dikshant3697/biovision-models/resolve/main/breast_image_model.keras",
-    "breast_model.h5": "https://huggingface.co/datasets/dikshant3697/biovision-models/resolve/main/breast_model.h5",
-    "breast_scaler.pkl": "https://huggingface.co/datasets/dikshant3697/biovision-models/resolve/main/breast_scaler.pkl",
-    "ecg_model.keras": "https://huggingface.co/datasets/dikshant3697/biovision-models/resolve/main/ecg_model.keras",
-    "lung_model.h5": "https://huggingface.co/datasets/dikshant3697/biovision-models/resolve/main/lung_model.h5",
-    "router_model.keras": "https://huggingface.co/datasets/dikshant3697/biovision-models/resolve/main/router_model.keras",
-    "skin_model.keras": "https://huggingface.co/datasets/dikshant3697/biovision-models/resolve/main/skin_model.keras",
-    "xray_model.keras": "https://huggingface.co/datasets/dikshant3697/biovision-models/resolve/main/xray_model.keras",
-}
+FILES = [
+    "blood_model.keras",
+    "breast_image_model.keras",
+    "breast_model.h5",
+    "breast_scaler.pkl",
+    "ecg_model.keras",
+    "lung_model.h5",
+    "router_model.keras",
+    "skin_model.keras",
+    "xray_model.keras",
+]
 
-def download_file(url, output_path):
-    print(f"Downloading {output_path}...")
-    response = requests.get(url, stream=True)
-    response.raise_for_status()
-    with open(output_path, "wb") as f:
-        for chunk in response.iter_content(chunk_size=8192):
-            if chunk:
-                f.write(chunk)
+TARGET_DIR = os.path.join("models", "weights")
+os.makedirs(TARGET_DIR, exist_ok=True)
 
-for filename, url in FILES.items():
-    output_path = os.path.join(MODEL_DIR, filename)
+for file_name in FILES:
+    print(f"Downloading {file_name}...")
+    downloaded_path = hf_hub_download(
+        repo_id=REPO_ID,
+        filename=file_name,
+        repo_type=REPO_TYPE
+    )
 
-    if os.path.exists(output_path):
-        print(f"Already exists: {filename}")
-        continue
+    target_path = os.path.join(TARGET_DIR, file_name)
 
-    download_file(url, output_path)
+    if not os.path.exists(target_path):
+        with open(downloaded_path, "rb") as src, open(target_path, "wb") as dst:
+            dst.write(src.read())
 
 print("All models downloaded successfully.")
