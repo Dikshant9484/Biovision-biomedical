@@ -1,0 +1,54 @@
+# =========================
+# Python
+# =========================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+venv/
+.venv/
+backend/venv/
+
+# =========================
+# Environment
+# =========================
+.env
+backend/.env
+frontend/.env
+
+# =========================
+# Frontend
+# =========================
+frontend/node_modules/
+frontend/dist/
+
+# =========================
+# Datasets / Downloads / Training
+# =========================
+datasets/
+data/
+downloads/
+training/
+backend/downloads/
+
+# =========================
+# Large model weights
+# =========================
+*.keras
+*.h5
+*.pt
+*.pkl
+*.joblib
+
+# =========================
+# Jupyter / misc
+# =========================
+.ipynb_checkpoints/
+
+# =========================
+# OS / Editor / Logs
+# =========================
+.DS_Store
+Thumbs.db
+.vscode/
+*.log

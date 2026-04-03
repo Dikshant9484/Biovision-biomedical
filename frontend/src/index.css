@@ -1,0 +1,131 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    background-color: #060A12;
+    color: #e2e8f0;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: #0D1421; }
+  ::-webkit-scrollbar-thumb { background: #243352; border-radius: 99px; }
+}
+
+@layer components {
+  .glass {
+    background: rgba(20, 29, 46, 0.7);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .glass-light {
+    background: rgba(28, 40, 64, 0.5);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.07);
+  }
+
+  .neon-border-cyan {
+    border: 1px solid rgba(0, 229, 255, 0.3);
+    box-shadow: 0 0 20px rgba(0, 229, 255, 0.06), inset 0 0 20px rgba(0, 229, 255, 0.03);
+  }
+
+  .neon-border-teal {
+    border: 1px solid rgba(0, 201, 167, 0.3);
+    box-shadow: 0 0 20px rgba(0, 201, 167, 0.06);
+  }
+
+  .neon-text-cyan { color: #00E5FF; text-shadow: 0 0 20px rgba(0,229,255,0.5); }
+  .neon-text-teal { color: #00C9A7; text-shadow: 0 0 20px rgba(0,201,167,0.5); }
+
+  .btn-primary {
+    @apply relative inline-flex items-center gap-2 px-6 py-3 font-semibold rounded-xl
+           bg-gradient-to-r from-cyan-500 to-teal-500
+           text-ink-950 transition-all duration-200
+           hover:shadow-[0_0_30px_rgba(0,229,255,0.35)] hover:scale-[1.02]
+           active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 px-4 py-2 text-sm font-medium
+           text-slate-400 hover:text-white rounded-lg hover:bg-white/5
+           transition-all duration-150;
+  }
+
+  .cancer-tab {
+    @apply relative flex flex-col items-center gap-2 p-4 rounded-2xl cursor-pointer
+           transition-all duration-200 border border-transparent
+           hover:border-white/10 hover:bg-white/5;
+  }
+
+  .cancer-tab.active {
+    background: rgba(0, 229, 255, 0.06);
+    border-color: rgba(0, 229, 255, 0.25);
+    box-shadow: 0 0 24px rgba(0,229,255,0.08);
+  }
+
+  .result-positive {
+    background: rgba(255, 77, 109, 0.08);
+    border: 1px solid rgba(255, 77, 109, 0.3);
+  }
+
+  .result-negative {
+    background: rgba(0, 201, 167, 0.08);
+    border: 1px solid rgba(0, 201, 167, 0.3);
+  }
+
+  .feature-row {
+    @apply flex items-center justify-between py-2 px-3 rounded-lg
+           bg-white/[0.03] hover:bg-white/[0.06] transition-colors;
+  }
+
+  .section-label {
+    @apply text-[10px] font-mono font-semibold tracking-[0.2em] uppercase text-cyan-400/70;
+  }
+}
+
+/* Scanline overlay */
+.scanline::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.03) 2px,
+    rgba(0,0,0,0.03) 4px
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Dot grid background */
+.dot-grid {
+  background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+/* Confidence bar animation */
+@keyframes growBar {
+  from { width: 0% }
+  to   { width: var(--pct) }
+}
+.conf-bar { animation: growBar 1s cubic-bezier(.34,1.56,.64,1) forwards; }
+
+/* Chat typing dots */
+@keyframes dot-bounce {
+  0%,80%,100% { transform: translateY(0) }
+  40%         { transform: translateY(-6px) }
+}
+.typing-dot:nth-child(1) { animation: dot-bounce 1s 0s infinite }
+.typing-dot:nth-child(2) { animation: dot-bounce 1s 0.15s infinite }
+.typing-dot:nth-child(3) { animation: dot-bounce 1s 0.3s infinite }

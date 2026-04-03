@@ -1,0 +1,36 @@
+# BioVision AI — Render Deployment
+# Connect your GitHub repo at render.com → New → Blueprint
+
+services:
+  # ── Flask Backend ──────────────────────────────────────
+  - type: web
+    name: biovision-backend
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120
+    healthCheckPath: /api/health
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false          # ← Set this manually in Render dashboard
+      - key: SECRET_KEY
+        generateValue: true
+      - key: FLASK_DEBUG
+        value: "false"
+      - key: ALLOWED_ORIGINS
+        value: "https://biovision-frontend.onrender.com"
+
+  # ── React Frontend ─────────────────────────────────────
+  - type: web
+    name: biovision-frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        value: "https://biovision-backend.onrender.com/api"
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
